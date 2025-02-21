@@ -21,14 +21,23 @@ extern "C" {
 
 __extension__ typedef void *MARKER[0]; /**< generic marker for a point in a structure */
 
+struct my_cmdline_ipaddr {
+    uint8_t family;
+    union {
+        struct in_addr ipv4;
+        struct rte_ipv6_addr ipv6;
+    } addr;
+    unsigned int prefixlen; /* in case of network only */
+};
+
 typedef struct pkt_seq_s {
     /* Packet type and information */
     struct rte_ether_addr eth_dst_addr; /**< Destination Ethernet address */
     struct rte_ether_addr eth_src_addr; /**< Source Ethernet address */
 
-    struct cmdline_ipaddr ip_src_addr; /**< Source IPv4 address also used for IPv6 */
-    struct cmdline_ipaddr ip_dst_addr; /**< Destination IPv4 address */
-    uint32_t ip_mask;                  /**< IPv4 Netmask value */
+    struct my_cmdline_ipaddr ip_src_addr; /**< Source IPv4 address also used for IPv6 */
+    struct my_cmdline_ipaddr ip_dst_addr; /**< Destination IPv4 address */
+    uint32_t ip_mask;                     /**< IPv4 Netmask value */
 
     uint16_t sport;   /**< Source port value */
     uint16_t dport;   /**< Destination port value */

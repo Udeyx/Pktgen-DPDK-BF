@@ -39,6 +39,11 @@ extern "C" {
 #define PG_PREFIXMAX   128
 #define PG_V4PREFIXMAX 32
 
+#define RTE_IPV6_ADDR_SIZE 16
+struct rte_ipv6_addr {
+    uint8_t a[RTE_IPV6_ADDR_SIZE];
+};
+
 struct pg_ipaddr {
     uint8_t family;
     union {

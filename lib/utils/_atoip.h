@@ -28,6 +28,11 @@ extern "C" {
 #define RTE_PREFIXMAX   128
 #define RTE_V4PREFIXMAX 32
 
+#define RTE_IPV6_ADDR_SIZE 16
+struct rte_ipv6_addr {
+    uint8_t a[RTE_IPV6_ADDR_SIZE];
+};
+
 struct rte_ipaddr {
     uint8_t family;
     union {

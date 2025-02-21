@@ -4,6 +4,7 @@
 
 /* Created 2010 by Keith Wiles @ intel.com */
 
+#include <stdio.h>
 #include <sys/queue.h>
 #include <netinet/in.h>
 #include <net/if.h>
@@ -19,11 +20,28 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <assert.h>
+#include <bsd/string.h>
+#include <pthread.h>
 
 #include "lua_config.h"
 #include "lua_stdio.h"
 #include "lua_utils.h"
 #include "lua_socket.h"
+
+#define RTE_THREAD_NAME_SIZE 16
+
+static void
+rte_thread_set_name(pthread_t *thread, const char *thread_name)
+{
+    char truncated[RTE_THREAD_NAME_SIZE];
+    const size_t truncatedsz = sizeof(truncated);
+
+    if (strlcpy(truncated, thread_name, truncatedsz) >= truncatedsz)
+        // EAL_LOG(DEBUG, "Truncated thread name");
+        printf("\n\n\nFuck!!!\n\n\n");
+
+    pthread_setname_np(*thread, truncated);
+}
 
 static int
 server_startup(luaData_t *ld)
@@ -299,8 +317,6 @@ lua_server(void *arg)
     return NULL;
 }
 
-int rte_thread_set_name(pthread_t id, const char *name);
-
 int
 lua_start_socket(luaData_t *ld, pthread_t *pthread, char *hostname, int port)
 {
@@ -316,7 +332,7 @@ lua_start_socket(luaData_t *ld, pthread_t *pthread, char *hostname, int port)
     if (r)
         return -1;
 
-    rte_thread_set_name(*pthread, "pktgen-socket");
+    rte_thread_set_name(pthread, "pktgen-socket");
 
     return 0;
 }
